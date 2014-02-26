@@ -50,6 +50,7 @@
      <Compile Include="Assets\Scripts\LineMountain.cs" />
      <Compile Include="Assets\Scripts\Physics.cs" />
      <Compile Include="Assets\Scripts\SpawnMountain.cs" />
+     <Compile Include="Assets\Scripts\bulletScript.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

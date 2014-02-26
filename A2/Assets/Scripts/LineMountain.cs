@@ -39,12 +39,12 @@ public class LineMountain : MonoBehaviour {
 		for (int j = 0; j < depth; j++)
 		{
 			int oldCount = pList.Count;
-			Debug.Log("New count is: " + oldCount);
+			//Debug.Log("New count is: " + oldCount);
 
 			//plus two to do every other one!
 			for (int i = 0; i < pList.Count - 1; i += 2)
 			{
-				Debug.Log("A = " + pList[i].ToString());
+			//	Debug.Log("A = " + pList[i].ToString());
 				//Debug.Log("B = " + pList[i+1].ToString());
 
 				pList.Insert(i+1, getMidPoint(pList[i], pList[i+1]));
