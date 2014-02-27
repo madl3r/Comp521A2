@@ -12,7 +12,6 @@ public class LineMountain : MonoBehaviour {
 	public bool isRightMountain;
 
 	//Generic list or array list... not sure
-	//At the very least we will use insert.
 	List<Vector3> pointList;
 	public List<GameObject> theMountainPieces;
 
@@ -27,6 +26,7 @@ public class LineMountain : MonoBehaviour {
 		pointList.Add(foot);
 		pointList.Add(tip);
 
+		//Spawning the mountain at 5 lvls deep(I like that look the most)
 		spawnMountain(pointList, 5);
 	}
 	
@@ -48,22 +48,37 @@ public class LineMountain : MonoBehaviour {
 			for (int i = 0; i < pList.Count - 1; i += 2)
 			{
 				pList.Insert(i+1, getMidPoint(pList[i], pList[i+1]));
+
+				//decided to put the point movement inside of the point creation (so new points now are at different distances)
+				if (i+1 != 0 && i+1 != pList.Count -1)
+				{
+					Vector3 theLine = pList[i+2] - pList[i];
+					Vector3 perpLine = new Vector3(-theLine.y, theLine.x, 0);
+					
+					pList[i+1] = pList[i+1] + (Random.Range(-0.1f, 0.1f) * perpLine);
+				}
+
+
 			}
 
 		}
+
+
+		//point movement used to be out here... points were originally all made along a line then moved...
+		//I sorted liked how this looked more but I don't think that that's what midpoint bisection actually is...
 
 		// getting the perpendicular lines and moving the midpoints along it
-		for (int i = 0; i < pList.Count; i++)
-		{
-			if (i != 0 && i != pList.Count -1)
-			{
-				Vector3 theLine = pList[i+1] - pList[i];
-				Vector3 perpLine = new Vector3(-theLine.y, theLine.x, 0);
-				
-				pList[i] = pList[i] + (Random.Range(-0.5f, 0.5f) * perpLine);
-			}
-
-		}
+//		for (int i = 0; i < pList.Count; i++)
+//		{
+//			if (i != 0 && i != pList.Count -1)
+//			{
+//				Vector3 theLine = pList[i+1] - pList[i];
+//				Vector3 perpLine = new Vector3(-theLine.y, theLine.x, 0);
+//				
+//				pList[i] = pList[i] + (Random.Range(-0.5f, 0.5f) * perpLine);
+//			}
+//
+//		}
 
 		//making mountain cubes, rotating and then scaling them
 		for (int i = 0; i < pList.Count - 1; i++)
@@ -83,41 +98,27 @@ public class LineMountain : MonoBehaviour {
 
 		}
 
-		//Debug.Log("The Length of the list is now: " + pList.Count);
-
-		//for each (except the last) point in the list
-		//find the mid point, and insert that point.
-		//Get the orthog of the line between pt A & B
-		//move the new point some amount + or -ly along that line.
-		//Move forward (make sure you pass the new point.
-		//repeat.
-
-		//Once that is done, loop again doing the midpoints with the now existant points
-		//loop this until we are happy with the number of (depth times)
-
-
-		//When we're finally done with all of that go between all of the points and spawn a square on the midpoint
-		//Rotate the square so that it's x axis is on the line between the two points
-		//scale the square along the x to the length of the distance between the two
-		// make sure that the squares y scale is low.
 	}
 
+	//gets and returns the midpoint between two lines
 	Vector3 getMidPoint (Vector3 pA, Vector3 pB)
 	{
 		Vector3 C = new Vector3((pA.x + pB.x) / 2, (pA.y + pB.y) / 2, 0);
 		return C;
 	}
 
+	//updates the bullet lists to the newest mountain
 	void gimmieYourList (int i)
 	{
 		bulletScript.mountainBlocksList[i] = theMountainPieces;
 		bulletScript.thePointList[i] = pointList;
 	}
 
+	//Get hit by a bullet.
+	//move mountain shit around it a bit, and move the thing hit the most.
 	void updatePoints (int i)
 	{
-		//pointList[i] = pointList[i] + new Vector3 (0.2f, -0.2f, 0);
-		//pointList[i].y -= 0.5f;
+		//move dah points
 		if (i != 0)
 		{
 			pointList[i-1] = pointList[i-1] + new Vector3 (0.1f, -0.1f, 0);
@@ -125,10 +126,14 @@ public class LineMountain : MonoBehaviour {
 		pointList[i] = pointList[i] + new Vector3 (0.2f, -0.2f, 0);
 		if (i < theMountainPieces.Count - 1)
 		{
-			pointList[i+1] = pointList[i+1] + new Vector3 (0.1f, -0.1f, 0);
+			pointList[i+1] = pointList[i+1] + new Vector3 (0.2f, -0.2f, 0);
 
 		}
+		if (i < theMountainPieces.Count - 2)
+			pointList[i+2] = pointList[i+2] + new Vector3 (0.1f, -0.1f, 0);
 
+
+		//move the blocks
 		if (i != 0)
 		{
 			redrawBlock(i-1);
@@ -144,12 +149,12 @@ public class LineMountain : MonoBehaviour {
 
 	}
 
+	//Redraws the block at i.
 	void redrawBlock(int i)
 	{
 		theMountainPieces[i].transform.position = getMidPoint(pointList[i], pointList[i+1]);
 		theMountainPieces[i].transform.rotation = (Quaternion.LookRotation(pointList[i+1] - pointList[i]));
 		theMountainPieces[i].transform.localScale = new Vector3 (0.05f, 0.05f, Vector3.Distance(pointList[i], pointList[i+1]));
-
 	}
 
 

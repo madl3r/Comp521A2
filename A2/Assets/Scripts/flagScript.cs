@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-//MAKE THIS SHIT STATIC, when getting the wind just put the y position of the shit that is doing this.
-//put it in a function that gets called on update.
 
 public class flagScript : MonoBehaviour {
 
@@ -18,6 +16,7 @@ public class flagScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		//same perlin noise as with the bullet (time might not be 100% exactly the same... but is definitely close enough!!
 		windPower += (Mathf.PerlinNoise(Time.time, transform.position.y) - 0.47f) * 0.05f;
 			
 		if (windPower < -3)
