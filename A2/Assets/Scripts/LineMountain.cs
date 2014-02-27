@@ -9,16 +9,19 @@ public class LineMountain : MonoBehaviour {
 	public GameObject mtnCube;
 	public Vector3 foot;
 	public Vector3 tip;
+	public bool isRightMountain;
 
 	//Generic list or array list... not sure
 	//At the very least we will use insert.
 	List<Vector3> pointList;
+	public List<GameObject> theMountainPieces;
 
 	//maybe have a list of all of the other points. Go from the previous to the next always.
 	private Vector3 cbSpawnPt;
 
 	// Use this for initialization
 	void Start () {
+		theMountainPieces = new List<GameObject>();
 		pointList = new List<Vector3>();
 
 		pointList.Add(foot);
@@ -44,14 +47,12 @@ public class LineMountain : MonoBehaviour {
 			//plus two to do every other one!
 			for (int i = 0; i < pList.Count - 1; i += 2)
 			{
-			//	Debug.Log("A = " + pList[i].ToString());
-				//Debug.Log("B = " + pList[i+1].ToString());
-
 				pList.Insert(i+1, getMidPoint(pList[i], pList[i+1]));
 			}
 
 		}
 
+		// getting the perpendicular lines and moving the midpoints along it
 		for (int i = 0; i < pList.Count; i++)
 		{
 			if (i != 0 && i != pList.Count -1)
@@ -61,7 +62,6 @@ public class LineMountain : MonoBehaviour {
 				
 				pList[i] = pList[i] + (Random.Range(-0.5f, 0.5f) * perpLine);
 			}
-			//Instantiate(mtnCube, pList[i], Quaternion.identity);
 
 		}
 
@@ -69,34 +69,21 @@ public class LineMountain : MonoBehaviour {
 		for (int i = 0; i < pList.Count - 1; i++)
 		{
 
-//			mtnCube.transform.rotation = Quaternion.LookRotation(pList[i] - pList[i+1]); 
-
 			GameObject tempCube;
 
-			//if (i != 0 && i != pList.Count - 1)
-			//{
 			tempCube = (GameObject) Instantiate(mtnCube, getMidPoint(pList[i], pList[i+1]), Quaternion.identity);
-			//
+
+			if (isRightMountain)
+				tempCube.tag = "dahMountain";
+
 			tempCube.transform.rotation = (Quaternion.LookRotation(pList[i+1] - pList[i]));
 			tempCube.transform.localScale = new Vector3 (0.05f, 0.05f, Vector3.Distance(pList[i], pList[i+1]));
 
-
-			//tempCube.transform.rotation = ( Quaternion.LookRotation(pList[i] - pList[i+1]));
-				//Vector3 newCorner = new Vector3(pList[i].x, pList[i+1].y, 0);
-				//Vector3 perpLine = newCorner - tempCube.transform.position;
-
-				//float dahNoise = Random.
-
-				//tempCube.transform.position = tempCube.transform.position + (Random.Range(-0.5f, 0.5f) * perpLine);
-				//Debug.Log("dah distance is: " + (pList[i] - pList[i+1]));
-
-			//}
-
-
+			theMountainPieces.Add(tempCube);
 
 		}
 
-		Debug.Log("The Length of the list is now: " + pList.Count);
+		//Debug.Log("The Length of the list is now: " + pList.Count);
 
 		//for each (except the last) point in the list
 		//find the mid point, and insert that point.
@@ -120,5 +107,49 @@ public class LineMountain : MonoBehaviour {
 		Vector3 C = new Vector3((pA.x + pB.x) / 2, (pA.y + pB.y) / 2, 0);
 		return C;
 	}
+
+	void gimmieYourList (int i)
+	{
+		bulletScript.mountainBlocksList[i] = theMountainPieces;
+	}
+
+	void updatePoints (int i)
+	{
+		//pointList[i] = pointList[i] + new Vector3 (0.2f, -0.2f, 0);
+		//pointList[i].y -= 0.5f;
+		if (i != 0)
+		{
+			pointList[i-1] = pointList[i-1] + new Vector3 (0.1f, -0.1f, 0);
+		}
+		pointList[i] = pointList[i] + new Vector3 (0.2f, -0.2f, 0);
+		if (i < theMountainPieces.Count - 1)
+		{
+			pointList[i+1] = pointList[i+1] + new Vector3 (0.1f, -0.1f, 0);
+
+		}
+
+		if (i != 0)
+		{
+			redrawBlock(i-1);
+			if (i != 1)
+				redrawBlock(i-2);
+		}
+		redrawBlock(i);
+		if (i < theMountainPieces.Count - 1)
+		{		redrawBlock(i+1);
+			if (i < theMountainPieces.Count - 2)
+				redrawBlock(i+2);
+		}
+
+	}
+
+	void redrawBlock(int i)
+	{
+		theMountainPieces[i].transform.position = getMidPoint(pointList[i], pointList[i+1]);
+		theMountainPieces[i].transform.rotation = (Quaternion.LookRotation(pointList[i+1] - pointList[i]));
+		theMountainPieces[i].transform.localScale = new Vector3 (0.05f, 0.05f, Vector3.Distance(pointList[i], pointList[i+1]));
+
+	}
+
 
 }

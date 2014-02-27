@@ -29,7 +29,7 @@ public class CannonControl : MonoBehaviour {
 		   (Vector3.Dot((basePoint.transform.position - lookingPoint.transform.position), Vector3.up) <  0.025f))
 			transform.Rotate(Vector3.back * Time.deltaTime * 500);
 
-		if(Input.GetKeyDown("space") && canShoot)
+		if(Input.GetKey("space") && canShoot)
 		{
 			spawnAndShoot();
 			canShoot = false;
@@ -46,19 +46,19 @@ public class CannonControl : MonoBehaviour {
 		if(Input.GetKeyDown("left") && dahPower > 0)
 		{
 			dahPower -= 0.1f;
-			powerText.guiText.text = "GUN POWER: " + dahPower;
+			powerText.guiText.text = "GUN POWER: " + dahPower.ToString("0.0");;
 			//tempBullet.SendMessage("shootPower", dahPower);
 		}
 		else if (Input.GetKeyDown("left") && dahPower <= 0)
 		{
 			dahPower = 0;
-			powerText.guiText.text = "GUN POWER: " + dahPower;
+			powerText.guiText.text = "GUN POWER: " + dahPower.ToString("0.0");
 			//tempBullet.SendMessage("shootPower", dahPower);
 		}
 		if (Input.GetKeyDown("right"))
 		{
 			dahPower += 0.1f;
-			powerText.guiText.text = "GUN POWER: " + dahPower;
+			powerText.guiText.text = "GUN POWER: " + dahPower.ToString("0.0");
 			//tempBullet.SendMessage("shootPower", dahPower);
 		}
 	}
