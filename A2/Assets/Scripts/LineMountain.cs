@@ -27,7 +27,7 @@ public class LineMountain : MonoBehaviour {
 		pointList.Add(foot);
 		pointList.Add(tip);
 
-		spawnMountain(pointList, 4);
+		spawnMountain(pointList, 5);
 	}
 	
 	// Update is called once per frame
@@ -111,6 +111,7 @@ public class LineMountain : MonoBehaviour {
 	void gimmieYourList (int i)
 	{
 		bulletScript.mountainBlocksList[i] = theMountainPieces;
+		bulletScript.thePointList[i] = pointList;
 	}
 
 	void updatePoints (int i)

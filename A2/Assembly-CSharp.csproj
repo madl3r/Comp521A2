@@ -48,8 +48,6 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\CannonControl.cs" />
      <Compile Include="Assets\Scripts\LineMountain.cs" />
-     <Compile Include="Assets\Scripts\Physics.cs" />
-     <Compile Include="Assets\Scripts\SpawnMountain.cs" />
      <Compile Include="Assets\Scripts\bulletScript.cs" />
      <Compile Include="Assets\Scripts\flagScript.cs" />
   </ItemGroup>
